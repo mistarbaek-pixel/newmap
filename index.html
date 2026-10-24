@@ -354,4 +354,14 @@
     }
 
     function getTypeName(type) {
-      const types = { apartment: '아파트
+      const types = { apartment: '아파트', officetel: '오피스텔', villa: '주택/빌라', store: '상가/사무실' };
+      return types[type] || '기타';
+    }
+
+    function getRoomName(room) {
+      const rooms = { '1room': '1룸', '2room': '2룸', '3room': '3룸', '4room': '4룸이상' };
+      return rooms[room] || '1룸';
+    }
+  </script>
+</body>
+</html>
