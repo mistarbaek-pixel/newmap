@@ -2,8 +2,8 @@
 <html lang="ko">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>부동산 분양 매물 지도</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>부동산 분양 지도</title>
   
   <!-- Leaflet CSS & JS -->
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
@@ -14,70 +14,80 @@
 
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, system-ui, Roboto, sans-serif; }
-    body, html { width: 100%; height: 100%; overflow: hidden; }
+    body, html { width: 100%; height: 100%; overflow: hidden; background: #f8fafc; }
 
-    #app { display: flex; width: 100vw; height: 100vh; position: relative; }
+    /* 기본 데스크탑 레이아웃 (가로 배열) */
+    #app { 
+      display: flex; 
+      flex-direction: row; 
+      width: 100vw; 
+      height: 100vh; 
+      position: relative; 
+      overflow: hidden;
+    }
 
-    /* 사이드바 */
+    /* 사이드바 (데스크탑) */
     #sidebar {
-      width: 400px;
+      width: 380px;
       height: 100%;
       background: #ffffff;
       box-shadow: 2px 0 10px rgba(0,0,0,0.1);
       z-index: 1000;
       display: flex;
       flex-direction: column;
+      flex-shrink: 0;
     }
 
     .header {
-      padding: 16px 20px;
+      padding: 14px 18px;
       background: #1e293b;
       color: white;
       display: flex;
       justify-content: space-between;
       align-items: center;
     }
-    .header h1 { font-size: 18px; font-weight: 700; display: flex; align-items: center; gap: 8px; }
+    .header h1 { font-size: 17px; font-weight: 700; display: flex; align-items: center; gap: 8px; }
 
     /* 필터 영역 */
     .filter-box {
-      padding: 16px;
+      padding: 12px 16px;
       border-bottom: 1px solid #e2e8f0;
       background: #f8fafc;
       display: flex;
       flex-direction: column;
-      gap: 10px;
+      gap: 8px;
     }
     .search-input-wrap { position: relative; display: flex; align-items: center; }
-    .search-input-wrap input { width: 100%; padding: 10px 12px 10px 36px; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 14px; outline: none; }
+    .search-input-wrap input { width: 100%; padding: 9px 12px 9px 36px; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 14px; outline: none; background: white; }
     .search-input-wrap i { position: absolute; left: 10px; color: #64748b; }
     .filter-group { display: flex; gap: 8px; }
     .filter-group select { flex: 1; padding: 8px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 13px; background: white; }
 
     /* 매물 리스트 */
-    .property-list { flex: 1; overflow-y: auto; padding: 12px; }
+    .property-list { flex: 1; overflow-y: auto; padding: 12px; -webkit-overflow-scrolling: touch; }
     .property-card {
       display: flex;
       gap: 12px;
-      padding: 12px;
+      padding: 10px;
       border: 1px solid #e2e8f0;
       border-radius: 10px;
-      margin-bottom: 12px;
+      margin-bottom: 10px;
       cursor: pointer;
+      background: white;
       transition: background 0.2s, border-color 0.2s;
     }
     .property-card:hover { background: #f1f5f9; border-color: #2563eb; }
-    .property-card img { width: 90px; height: 90px; border-radius: 6px; object-fit: cover; }
-    .property-info { flex: 1; display: flex; flex-direction: column; justify-content: space-between; }
+    .property-card img { width: 85px; height: 85px; border-radius: 6px; object-fit: cover; flex-shrink: 0; }
+    .property-info { flex: 1; display: flex; flex-direction: column; justify-content: space-between; min-width: 0; }
     .property-tags { display: flex; gap: 4px; }
-    .property-type { font-size: 11px; font-weight: 600; color: #2563eb; background: #eff6ff; padding: 2px 6px; border-radius: 4px; width: fit-content; }
-    .property-room { font-size: 11px; font-weight: 600; color: #059669; background: #ecfdf5; padding: 2px 6px; border-radius: 4px; width: fit-content; }
-    .property-title { font-size: 14px; font-weight: 700; color: #0f172a; margin-top: 4px; }
+    .property-type { font-size: 11px; font-weight: 600; color: #2563eb; background: #eff6ff; padding: 2px 6px; border-radius: 4px; }
+    .property-room { font-size: 11px; font-weight: 600; color: #059669; background: #ecfdf5; padding: 2px 6px; border-radius: 4px; }
+    .property-title { font-size: 14px; font-weight: 700; color: #0f172a; margin-top: 4px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
     .property-price { font-size: 15px; font-weight: 800; color: #dc2626; margin-top: 2px; }
-    .property-details { font-size: 12px; color: #64748b; margin-top: 4px; }
+    .property-details { font-size: 12px; color: #64748b; margin-top: 2px; }
 
-    /* 지도 영역 */
-    #map { flex: 1; height: 100%; position: relative; }
+    /* 지도 영역 (데스크탑) */
+    #map { flex: 1; height: 100%; position: relative; z-index: 1; }
 
     /* 커스텀 가격 마커 뱃지 */
     .custom-price-badge {
@@ -93,7 +103,6 @@
       cursor: pointer;
       text-align: center;
     }
-    .custom-price-badge:hover { background: #1d4ed8; transform: scale(1.05); }
 
     /* 내 위치 버튼 */
     .my-location-btn {
@@ -103,10 +112,53 @@
       z-index: 1000;
       background: white;
       border: none;
-      padding: 12px;
+      padding: 10px;
       border-radius: 50%;
       box-shadow: 0 4px 12px rgba(0,0,0,0.15);
       cursor: pointer;
+    }
+
+    /* 📱 모바일 전용 반응형 세로 배치 (768px 이하) */
+    @media (max-width: 768px) {
+      #app { 
+        flex-direction: column; /* 세로 배치 */
+      }
+
+      /* 모바일 상단: 지도 배치 (화면 높이의 48%) */
+      #map { 
+        width: 100%; 
+        height: 48vh; 
+        order: 1; 
+        flex: none; 
+      }
+
+      /* 모바일 하단: 사이드바 및 리스트 (화면 높이의 52%) */
+      #sidebar { 
+        width: 100%; 
+        height: 52vh; 
+        order: 2; 
+        flex: none; 
+        box-shadow: 0 -2px 10px rgba(0,0,0,0.1); 
+      }
+
+      .header { padding: 10px 14px; }
+      .header h1 { font-size: 15px; }
+
+      .filter-box { padding: 10px 12px; gap: 6px; }
+      .search-input-wrap input { padding: 7px 10px 7px 32px; font-size: 13px; }
+      .filter-group select { padding: 6px; font-size: 12px; }
+
+      .property-list { padding: 8px; }
+      .property-card { padding: 8px; margin-bottom: 8px; }
+      .property-card img { width: 75px; height: 75px; }
+      .property-title { font-size: 13px; }
+      .property-price { font-size: 14px; }
+
+      .my-location-btn {
+        bottom: 16px;
+        right: 16px;
+        padding: 8px;
+      }
     }
 
     /* 모달 공통 */
@@ -121,18 +173,18 @@
     }
     .modal-content {
       background: white;
-      padding: 24px;
+      padding: 20px;
       border-radius: 12px;
-      width: 500px;
+      width: 480px;
       max-width: 90%;
       max-height: 90vh;
       overflow-y: auto;
     }
-    .modal-content h2 { font-size: 18px; margin-bottom: 16px; display: flex; justify-content: space-between; align-items: center; }
-    .form-group { margin-bottom: 12px; }
-    .form-group label { display: block; font-size: 13px; font-weight: 600; margin-bottom: 4px; color: #334155; }
-    .form-group input, .form-group select { width: 100%; padding: 8px 10px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 14px; }
-    .modal-btns { display: flex; gap: 8px; margin-top: 20px; }
+    .modal-content h2 { font-size: 17px; margin-bottom: 14px; display: flex; justify-content: space-between; align-items: center; }
+    .form-group { margin-bottom: 10px; }
+    .form-group label { display: block; font-size: 12px; font-weight: 600; margin-bottom: 4px; color: #334155; }
+    .form-group input, .form-group select { width: 100%; padding: 8px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 13px; }
+    .modal-btns { display: flex; gap: 8px; margin-top: 16px; }
     .modal-btns button { flex: 1; padding: 10px; border: none; border-radius: 6px; font-weight: 600; cursor: pointer; }
     .btn-primary { background: #2563eb; color: white; }
     .btn-danger { background: #dc2626; color: white; }
@@ -142,7 +194,7 @@
 <body>
 
   <div id="app">
-    <!-- 사이드바 -->
+    <!-- 사이드바 (모바일에서는 하단에 위치) -->
     <div id="sidebar">
       <div class="header">
         <h1><i data-lucide="building-2"></i> 부동산 분양 지도</h1>
@@ -150,7 +202,7 @@
 
       <div class="filter-box">
         <div class="search-input-wrap">
-          <i data-lucide="search" size="18"></i>
+          <i data-lucide="search" size="16"></i>
           <input type="text" id="searchInput" placeholder="지역명 또는 매물명 검색" onkeyup="filterProperties()">
         </div>
         <div class="filter-group">
@@ -176,11 +228,12 @@
       <div class="property-list" id="propertyList"></div>
     </div>
 
-    <!-- 지도 영역 -->
-    <div id="map"></div>
-    <button class="my-location-btn" onclick="moveToMyLocation()" title="내 위치">
-      <i data-lucide="crosshair" color="#2563eb"></i>
-    </button>
+    <!-- 지도 영역 (모바일에서는 상단에 위치) -->
+    <div id="map">
+      <button class="my-location-btn" onclick="moveToMyLocation()" title="내 위치">
+        <i data-lucide="crosshair" color="#2563eb" size="20"></i>
+      </button>
+    </div>
   </div>
 
   <!-- 관리자 로그인 / 매물 관리 모달 -->
@@ -258,6 +311,10 @@
     let markers = [];
     lucide.createIcons();
     renderMapAndList(propertiesData);
+
+    // 모달/화면 크기 변경 시 지도 크기 재계산 (모바일 렌더링 깨짐 방지)
+    setTimeout(() => { map.invalidateSize(); }, 300);
+    window.addEventListener('resize', () => { map.invalidateSize(); });
 
     // Ctrl + Shift + A 감지하여 관리자창 호출
     document.addEventListener('keydown', function(e) {
