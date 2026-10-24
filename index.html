@@ -9,7 +9,7 @@
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 
-  <!-- PapaParse (Google Sheets CSV 파싱용) -->
+  <!-- PapaParse -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
 
   <!-- Lucide Icons -->
@@ -17,14 +17,37 @@
 
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, system-ui, Roboto, sans-serif; }
-    body, html { width: 100%; height: 100%; background: #f8fafc; }
+    
+    /* 1. 전체 웹화면 스크롤바 표시 설정 */
+    body, html { 
+      width: 100%; 
+      min-height: 100%; 
+      overflow-y: auto !important; 
+      background: #f8fafc; 
+    }
 
-    #app { display: flex; flex-direction: row; width: 100vw; height: 100vh; position: relative; overflow: hidden; }
+    /* 🎨 커스텀 스크롤바 스타일 (전체 화면 & 매물 목록 공통) */
+    ::-webkit-scrollbar {
+      width: 8px; /* 스크롤바 두께 */
+      height: 8px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #f1f5f9; /* 스크롤바 배경색 */
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #94a3b8; /* 스크롤바 막대 색상 */
+      border-radius: 4px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #64748b;
+    }
+
+    #app { display: flex; flex-direction: row; width: 100%; min-height: 100vh; position: relative; }
 
     /* 사이드바 */
     #sidebar {
       width: 380px;
-      height: 100%;
+      min-height: 100vh;
       background: #ffffff;
       box-shadow: 2px 0 10px rgba(0,0,0,0.1);
       z-index: 1000;
@@ -43,7 +66,6 @@
     }
     .header h1 { font-size: 17px; font-weight: 700; display: flex; align-items: center; gap: 8px; }
     .settings-btn { background: none; border: none; color: #94a3b8; cursor: pointer; display: flex; align-items: center; }
-    .settings-btn:hover { color: white; }
 
     /* 필터 영역 */
     .filter-box {
@@ -60,8 +82,12 @@
     .filter-group { display: flex; gap: 8px; }
     .filter-group select { flex: 1; padding: 8px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 13px; background: white; }
 
-    /* 매물 리스트 (여백 유지, 넉넉한 사이즈) */
-    .property-list { flex: 1; overflow-y: auto; padding: 12px; -webkit-overflow-scrolling: touch; }
+    /* 2. 매물 리스트 스크롤바 표시 설정 */
+    .property-list { 
+      padding: 12px; 
+      overflow-y: auto !important; 
+      -webkit-overflow-scrolling: touch; 
+    }
     .property-card {
       display: flex;
       gap: 12px;
@@ -84,7 +110,7 @@
     .property-details { font-size: 12px; color: #64748b; margin-top: 2px; }
 
     /* 지도 영역 */
-    #map { flex: 1; height: 100%; position: relative; z-index: 1; }
+    #map { flex: 1; height: 100vh; position: sticky; top: 0; z-index: 1; }
 
     .custom-price-badge {
       background: #2563eb;
@@ -113,21 +139,17 @@
       cursor: pointer;
     }
 
-    /* 📱 모바일 반응형 (대표님이 직접 늘리신 테이블 세로 길이에 연동됨) */
+    /* 📱 모바일 반응형 */
     @media (max-width: 768px) {
-      #app { flex-direction: column; }
-      #map { width: 100%; height: 48vh; order: 1; flex: none; }
-      #sidebar { width: 100%; height: auto; min-height: 60vh; order: 2; flex: none; box-shadow: 0 -2px 10px rgba(0,0,0,0.1); }
+      #app { flex-direction: column; min-height: auto; }
+      #map { width: 100%; height: 320px; position: relative; order: 1; flex: none; }
+      #sidebar { width: 100%; min-height: auto; order: 2; flex: none; box-shadow: none; }
       .header { padding: 10px 14px; }
       .header h1 { font-size: 15px; }
       .filter-box { padding: 10px 12px; gap: 6px; }
-      .search-input-wrap input { padding: 7px 10px 7px 32px; font-size: 13px; }
-      .filter-group select { padding: 6px; font-size: 12px; }
       .property-list { padding: 10px; }
       .property-card { padding: 10px; margin-bottom: 10px; }
       .property-card img { width: 80px; height: 80px; }
-      .property-title { font-size: 14px; }
-      .property-price { font-size: 15px; }
       .my-location-btn { bottom: 16px; right: 16px; padding: 8px; }
     }
 
@@ -195,7 +217,7 @@
     </div>
   </div>
 
-  <!-- 구글 시트 URL 설정 모달 -->
+  <!-- 설정 모달 -->
   <div class="modal" id="configModal">
     <div class="modal-content">
       <h2>
