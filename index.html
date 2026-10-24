@@ -34,54 +34,54 @@
     }
 
     .header {
-      padding: 14px 18px;
+      padding: 12px 16px;
       background: #1e293b;
       color: white;
       display: flex;
       justify-content: space-between;
       align-items: center;
     }
-    .header h1 { font-size: 17px; font-weight: 700; display: flex; align-items: center; gap: 8px; }
+    .header h1 { font-size: 16px; font-weight: 700; display: flex; align-items: center; gap: 8px; }
     .settings-btn { background: none; border: none; color: #94a3b8; cursor: pointer; display: flex; align-items: center; }
     .settings-btn:hover { color: white; }
 
     /* 필터 영역 */
     .filter-box {
-      padding: 12px 16px;
+      padding: 8px 12px;
       border-bottom: 1px solid #e2e8f0;
       background: #f8fafc;
       display: flex;
       flex-direction: column;
-      gap: 8px;
+      gap: 6px;
     }
     .search-input-wrap { position: relative; display: flex; align-items: center; }
-    .search-input-wrap input { width: 100%; padding: 9px 12px 9px 36px; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 14px; outline: none; background: white; }
+    .search-input-wrap input { width: 100%; padding: 7px 10px 7px 32px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 13px; outline: none; background: white; }
     .search-input-wrap i { position: absolute; left: 10px; color: #64748b; }
-    .filter-group { display: flex; gap: 8px; }
-    .filter-group select { flex: 1; padding: 8px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 13px; background: white; }
+    .filter-group { display: flex; gap: 6px; }
+    .filter-group select { flex: 1; padding: 6px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 12px; background: white; }
 
-    /* 매물 리스트 */
-    .property-list { flex: 1; overflow-y: auto; padding: 12px; -webkit-overflow-scrolling: touch; }
+    /* 매물 리스트 (간격 최적화로 5개 표시) */
+    .property-list { flex: 1; overflow-y: auto; padding: 6px 10px; -webkit-overflow-scrolling: touch; }
     .property-card {
       display: flex;
-      gap: 12px;
-      padding: 10px;
+      gap: 10px;
+      padding: 8px;
       border: 1px solid #e2e8f0;
-      border-radius: 10px;
-      margin-bottom: 10px;
+      border-radius: 8px;
+      margin-bottom: 6px;
       cursor: pointer;
       background: white;
       transition: background 0.2s, border-color 0.2s;
     }
     .property-card:hover { background: #f1f5f9; border-color: #2563eb; }
-    .property-card img { width: 85px; height: 85px; border-radius: 6px; object-fit: cover; flex-shrink: 0; }
+    .property-card img { width: 70px; height: 70px; border-radius: 6px; object-fit: cover; flex-shrink: 0; }
     .property-info { flex: 1; display: flex; flex-direction: column; justify-content: space-between; min-width: 0; }
     .property-tags { display: flex; gap: 4px; }
-    .property-type { font-size: 11px; font-weight: 600; color: #2563eb; background: #eff6ff; padding: 2px 6px; border-radius: 4px; }
-    .property-room { font-size: 11px; font-weight: 600; color: #059669; background: #ecfdf5; padding: 2px 6px; border-radius: 4px; }
-    .property-title { font-size: 14px; font-weight: 700; color: #0f172a; margin-top: 4px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-    .property-price { font-size: 15px; font-weight: 800; color: #dc2626; margin-top: 2px; }
-    .property-details { font-size: 12px; color: #64748b; margin-top: 2px; }
+    .property-type { font-size: 10px; font-weight: 600; color: #2563eb; background: #eff6ff; padding: 1px 5px; border-radius: 4px; }
+    .property-room { font-size: 10px; font-weight: 600; color: #059669; background: #ecfdf5; padding: 1px 5px; border-radius: 4px; }
+    .property-title { font-size: 13px; font-weight: 700; color: #0f172a; margin-top: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .property-price { font-size: 14px; font-weight: 800; color: #dc2626; margin-top: 1px; }
+    .property-details { font-size: 11px; color: #64748b; margin-top: 1px; }
 
     /* 지도 영역 */
     #map { flex: 1; height: 100%; position: relative; z-index: 1; }
@@ -118,16 +118,17 @@
       #app { flex-direction: column; }
       #map { width: 100%; height: 48vh; order: 1; flex: none; }
       #sidebar { width: 100%; height: 52vh; order: 2; flex: none; box-shadow: 0 -2px 10px rgba(0,0,0,0.1); }
-      .header { padding: 10px 14px; }
-      .header h1 { font-size: 15px; }
-      .filter-box { padding: 10px 12px; gap: 6px; }
-      .search-input-wrap input { padding: 7px 10px 7px 32px; font-size: 13px; }
-      .filter-group select { padding: 6px; font-size: 12px; }
-      .property-list { padding: 8px; }
-      .property-card { padding: 8px; margin-bottom: 8px; }
-      .property-card img { width: 75px; height: 75px; }
-      .property-title { font-size: 13px; }
-      .property-price { font-size: 14px; }
+      .header { padding: 8px 12px; }
+      .header h1 { font-size: 14px; }
+      .filter-box { padding: 6px 10px; gap: 5px; }
+      .search-input-wrap input { padding: 6px 8px 6px 28px; font-size: 12px; }
+      .filter-group select { padding: 5px; font-size: 11px; }
+      .property-list { padding: 6px 8px; }
+      .property-card { padding: 6px 8px; margin-bottom: 5px; }
+      .property-card img { width: 65px; height: 65px; }
+      .property-title { font-size: 12px; }
+      .property-price { font-size: 13px; }
+      .property-details { font-size: 10px; }
       .my-location-btn { bottom: 16px; right: 16px; padding: 8px; }
     }
 
@@ -211,7 +212,6 @@
   </div>
 
   <script>
-    // ⚠️ 여기에 구글 시트 CSV URL을 미리 넣어두면 설정 창 입력 없이 기본 연결됩니다!
     const DEFAULT_SHEETS_CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vS3RwyTetsRnr-ZbsGgnVa6jvCiWCn_mU6U-L-GCo8c3ZjB8cUB_eJlguSBAzdckrjSSQ2xK0aM7yKh/pub?gid=0&single=true&output=csv";
 
     let propertiesData = [];
@@ -253,9 +253,9 @@
           propertiesData = results.data.filter(item => item.lat && item.lng);
           renderMapAndList(propertiesData);
           if (propertiesData.length > 0) {
-            // 첫 번째 매물 위치로 지도를 살짝 이동
             map.setView([parseFloat(propertiesData[0].lat), parseFloat(propertiesData[0].lng)], 13);
           }
+          setTimeout(() => { map.invalidateSize(); }, 300);
         },
         error: function(err) {
           alert('구글 시트 데이터를 불러올 수 없습니다. 웹에 게시된 CSV URL이 맞는지 확인해 주세요.');
